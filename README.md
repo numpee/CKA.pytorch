@@ -4,8 +4,8 @@
 
 ## Usage
 ```python
-model1 = ... # Some model
-model2 = ... # Another model
+model1 = ... # Some model, casted to GPU
+model2 = ... # Another model, casted to GPU
 dataloader = ... # Your dataloader
 
 calculator = CKACalculator(model1, model2, dataloader)
