@@ -12,7 +12,7 @@ calculator = CKACalculator(model1, model2, dataloader)
 cka_matrix = calculator.calculate_cka_matrix()
 ```
 
-Rather than caching intermediate feature representation, this code calculates CKA on-the-fly (simultaneously with the model forward pass) by using the mini-batch CKA, as described in the [paper by Nguyen et. al.](https://openreview.net/pdf?id=KJNcAkY8tY4)
+Rather than caching intermediate feature representations, this code computes CKA on-the-fly (simultaneously with the model forward pass) by using the mini-batch CKA, as described in the [paper by Nguyen et. al.](https://openreview.net/pdf?id=KJNcAkY8tY4)
 By leveraging GPU superiority, **this implementation runs much faster than any Numpy implementation.**
 
 (This code was used for the CKA analysis in our paper. arXiv link coming soon :fire:)
@@ -37,7 +37,7 @@ Try out the example notebook in `example.ipynb`.
 
 ## Other
 * If you found this repo helpful, please give it a :star:
-* If you find any bugs/improvements, please create a new issue.
+* If you find any bugs/improvements, feel free to create a new issue.
 * This code is mostly tested on ResNets
 
 ### TODO (when I feel like it)
