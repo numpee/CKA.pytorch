@@ -3,7 +3,7 @@
 **A PyTorch implementation of Centered Kernel Alignment (CKA) with GPU support.** 
 
 Rather than caching intermediate feature representation, this code calculates CKA on-the-fly (simultaneously with the model forward pass) by using the mini-batch CKA, as described in the [paper by Nguyen et. al.](https://openreview.net/pdf?id=KJNcAkY8tY4)
-By leveraging GPU superiority, this implementation runs much faster than any Numpy implementation.
+By leveraging GPU superiority, **this implementation runs much faster than any Numpy implementation.**
 
 (This code was used for the CKA analysis in our paper. arXiv link coming soon :fire:)
 
