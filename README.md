@@ -2,6 +2,16 @@
 
 **A PyTorch implementation of Centered Kernel Alignment (CKA) with GPU support.** 
 
+## Usage
+```python
+model1 = ... # Some model
+model2 = ... # Another model
+dataloader = ... # Your dataloader
+
+calculator = CKACalculator(model1, model2, dataloader)
+cka_matrix = calculator.calculate_cka_matrix()
+```
+
 Rather than caching intermediate feature representation, this code calculates CKA on-the-fly (simultaneously with the model forward pass) by using the mini-batch CKA, as described in the [paper by Nguyen et. al.](https://openreview.net/pdf?id=KJNcAkY8tY4)
 By leveraging GPU superiority, **this implementation runs much faster than any Numpy implementation.**
 
