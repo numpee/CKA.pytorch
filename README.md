@@ -15,7 +15,7 @@ cka_matrix = calculator.calculate_cka_matrix()
 Rather than caching intermediate feature representations, this code computes CKA on-the-fly (simultaneously with the model forward pass) by using the mini-batch CKA, as described in the [paper by Nguyen et. al.](https://openreview.net/pdf?id=KJNcAkY8tY4)
 By leveraging GPU superiority, **this implementation runs much faster than any Numpy implementation.**
 
-This code was used for the CKA analysis in our CVPR 2023 paper, "On the Stability-Plasticity Dilemma of Class-Incremental Learning". [Link to paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Kim_On_the_Stability-Plasticity_Dilemma_of_Class-Incremental_Learning_CVPR_2023_paper.pdf)
+This code was used for the CKA analysis in our CVPR 2023 paper, "[On the Stability-Plasticity Dilemma of Class-Incremental Learning](https://openaccess.thecvf.com/content/CVPR2023/papers/Kim_On_the_Stability-Plasticity_Dilemma_of_Class-Incremental_Learning_CVPR_2023_paper.pdf)".
 
 ## Setup
 I haven't added a `requirements.txt` since the exact version of each package is not that important :man_shrugging:
