@@ -95,6 +95,8 @@ class CKACalculator:
 
                 except NotEnoughSamplesError as e:
                     warnings.warn(f"Skipping batch {it}: {e}")
+                    continue
+                
                 finally:
                     self.hook_manager1.clear_features()
                     self.hook_manager2.clear_features()
