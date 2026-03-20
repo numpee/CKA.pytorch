@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 
 class NotEnoughSamplesError(Exception):
-    min_samples: int = 3
+    min_samples: int = 4
 
 class CKACalculator:
     def __init__(self, model1: nn.Module, model2: nn.Module, dataloader: DataLoader,
@@ -130,8 +130,8 @@ class CKACalculator:
         n = K.size(1)
 
 
-        # We need at least 3 samples. Otherwise, division by zero below.
-        # Either in (n-1) for n=1, (n-2) for n=2
+        # We need at least 4 samples. Otherwise, division by zero below.
+        # Either in (n-1) for n=1, (n-2) for n=2, (n**2 - 3*n) for n=3
         if n < NotEnoughSamplesError.min_samples:
             raise NotEnoughSamplesError(
                 f"Not enough samples to compute HSIC. Got N={n}, need at least {NotEnoughSamplesError.min_samples} samples to avoid division by zero."
