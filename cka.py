@@ -8,6 +8,7 @@ Year: 2022
 
 from __future__ import annotations
 
+import warnings
 from typing import Tuple, Optional, Callable, Type, Union, TYPE_CHECKING, List
 
 import torch
@@ -20,6 +21,9 @@ from metrics import AccumTensor
 if TYPE_CHECKING:
     from torch.utils.data import DataLoader
 
+
+class NotEnoughSamplesError(Exception):
+    min_samples: int = 4
 
 class CKACalculator:
     def __init__(self, model1: nn.Module, model2: nn.Module, dataloader: DataLoader,
@@ -79,17 +83,27 @@ class CKACalculator:
                 if self.num_layers_X is None:
                     curr_hsic_matrix, curr_self_hsic_x, curr_self_hsic_y = self._init_values(all_layer_X, all_layer_Y)
 
-                # Get self HSIC values --> HSIC(K, K), HSIC(L, L)
-                self._calculate_self_hsic(all_layer_X, all_layer_Y, curr_self_hsic_x, curr_self_hsic_y)
+                try:
+                    # Get self HSIC values --> HSIC(K, K), HSIC(L, L)
+                    self._calculate_self_hsic(
+                        all_layer_X, all_layer_Y, curr_self_hsic_x, curr_self_hsic_y
+                    )
+                    # Get cross HSIC values --> HSIC(K, L)
+                    self._calculate_cross_hsic(
+                        all_layer_X, all_layer_Y, curr_hsic_matrix
+                    )
 
-                # Get cross HSIC values --> HSIC(K, L)
-                self._calculate_cross_hsic(all_layer_X, all_layer_Y, curr_hsic_matrix)
+                except NotEnoughSamplesError as e:
+                    warnings.warn(f"Skipping batch {it}: {e}")
+                    continue
+                
+                finally:
+                    self.hook_manager1.clear_features()
+                    self.hook_manager2.clear_features()
+                    curr_hsic_matrix.fill_(0)
+                    curr_self_hsic_x.fill_(0)
+                    curr_self_hsic_y.fill_(0)
 
-                self.hook_manager1.clear_features()
-                self.hook_manager2.clear_features()
-                curr_hsic_matrix.fill_(0)
-                curr_self_hsic_x.fill_(0)
-                curr_self_hsic_y.fill_(0)
 
         # Update values across GPUs
         hsic_matrix = self.hsic_matrix.compute()
@@ -116,6 +130,15 @@ class CKACalculator:
         K = K.clone()
         L = L.clone()
         n = K.size(1)
+
+
+        # We need at least 4 samples. Otherwise, division by zero below.
+        # Either in (n-1) for n=1, (n-2) for n=2, (n**2 - 3*n) for n=3
+        if n < NotEnoughSamplesError.min_samples:
+            raise NotEnoughSamplesError(
+                f"Not enough samples to compute HSIC. Got N={n}, need at least {NotEnoughSamplesError.min_samples} samples to avoid division by zero."
+            )
+
 
         # K, L --> K~, L~ by setting diagonals to zero
         K.diagonal(dim1=-1, dim2=-2).fill_(0)
